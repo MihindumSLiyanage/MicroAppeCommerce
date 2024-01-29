@@ -2,7 +2,7 @@
 using Services.ProductAPI.Models;
 using Services.ProductAPI.Models.Dto;
 
-namespace Services.CouponAPI
+namespace Services.ProductAPI
 {
     public class MappingConfig
     {
