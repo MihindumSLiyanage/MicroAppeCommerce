@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Service.MessageBus;
 using Services.CartAPI;
 using Services.CartAPI.Data;
 using Services.CartAPI.Extensions;
@@ -33,6 +34,8 @@ new Uri(builder.Configuration["ServiceUrls:CouponAPI"])).AddHttpMessageHandler<B
 
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IMessageBus, MessageBus>();
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllers();
