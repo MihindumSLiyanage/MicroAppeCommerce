@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Services.OrderAPI.Data;
 using Services.OrderAPI.Models;
 using Services.OrderAPI.Models.Dto;
-using Services.OrderAPI.Service.IService;
 using Services.OrderAPI.Utility;
+using Stripe;
+using Stripe.Checkout;
+
 
 namespace Services.OrderAPI.Controllers
 {
@@ -17,14 +19,12 @@ namespace Services.OrderAPI.Controllers
         protected ResponseDto _response;
         private IMapper _mapper;
         private readonly AppDbContext _dbContext;
-        private IProductService _productService;
         private readonly IConfiguration _configuration;
 
-        public OrderController(AppDbContext dbContext, IProductService productService, IMapper mapper, IConfiguration configuration)
+        public OrderController(AppDbContext dbContext, IMapper mapper, IConfiguration configuration)
         {
             _dbContext = dbContext;
             this._response = new ResponseDto();
-            _productService = productService;
             _mapper = mapper;
             _configuration = configuration;
         }
@@ -71,6 +71,8 @@ namespace Services.OrderAPI.Controllers
             return _response;
         }
 
+
+
         [Authorize]
         [HttpPost("CreateOrder")]
         public async Task<ResponseDto> CreateOrder([FromBody] CartDto cartDto)
@@ -92,6 +94,138 @@ namespace Services.OrderAPI.Controllers
             {
                 _response.IsSuccess = false;
                 _response.Message = ex.Message;
+            }
+            return _response;
+        }
+
+
+        [Authorize]
+        [HttpPost("CreateStripeSession")]
+        public async Task<ResponseDto> CreateStripeSession([FromBody] StripeRequestDto stripeRequestDto)
+        {
+            try
+            {
+
+                var options = new SessionCreateOptions
+                {
+                    SuccessUrl = stripeRequestDto.ApprovedUrl,
+                    CancelUrl = stripeRequestDto.CancelUrl,
+                    LineItems = new List<SessionLineItemOptions>(),
+                    Mode = "payment",
+
+                };
+
+                var DiscountsObj = new List<SessionDiscountOptions>()
+                {
+                    new SessionDiscountOptions
+                    {
+                        Coupon=stripeRequestDto.OrderHeader.CouponCode
+                    }
+                };
+
+                foreach (var item in stripeRequestDto.OrderHeader.OrderDetails)
+                {
+                    var sessionLineItem = new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long)(item.Price * 100), // $20.99 -> 2099
+                            Currency = "usd",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = item.Product.Name
+                            }
+                        },
+                        Quantity = item.Count
+                    };
+
+                    options.LineItems.Add(sessionLineItem);
+                }
+
+                if (stripeRequestDto.OrderHeader.Discount > 0)
+                {
+                    options.Discounts = DiscountsObj;
+                }
+                var service = new SessionService();
+                Session session = service.Create(options);
+                stripeRequestDto.StripeSessionUrl = session.Url;
+                OrderHeader orderHeader = _dbContext.OrderHeaders.First(u => u.OrderHeaderId == stripeRequestDto.OrderHeader.OrderHeaderId);
+                orderHeader.StripeSessionId = session.Id;
+                _dbContext.SaveChanges();
+                _response.Result = stripeRequestDto;
+
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+            }
+            return _response;
+        }
+
+
+        [Authorize]
+        [HttpPost("ValidateStripeSession")]
+        public async Task<ResponseDto> ValidateStripeSession([FromBody] int orderHeaderId)
+        {
+            try
+            {
+                OrderHeader orderHeader = _dbContext.OrderHeaders.First(u => u.OrderHeaderId == orderHeaderId);
+
+                var service = new SessionService();
+                Session session = service.Get(orderHeader.StripeSessionId);
+
+                var paymentIntentService = new PaymentIntentService();
+                PaymentIntent paymentIntent = paymentIntentService.Get(session.PaymentIntentId);
+
+                if (paymentIntent.Status == "succeeded")
+                {
+                    //then payment was successful
+                    orderHeader.PaymentIntentId = paymentIntent.Id;
+                    orderHeader.Status = SD.Status_Approved;
+                    _dbContext.SaveChanges();
+
+                    string topicName = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedTopic");
+                    _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+            }
+            return _response;
+        }
+
+
+        [Authorize]
+        [HttpPost("UpdateOrderStatus/{orderId:int}")]
+        public async Task<ResponseDto> UpdateOrderStatus(int orderId, [FromBody] string newStatus)
+        {
+            try
+            {
+                OrderHeader orderHeader = _dbContext.OrderHeaders.First(u => u.OrderHeaderId == orderId);
+                if (orderHeader != null)
+                {
+                    if (newStatus == SD.Status_Cancelled)
+                    {
+                        var options = new RefundCreateOptions
+                        {
+                            Reason = RefundReasons.RequestedByCustomer,
+                            PaymentIntent = orderHeader.PaymentIntentId
+                        };
+
+                        var service = new RefundService();
+                        Refund refund = service.Create(options);
+                    }
+                    orderHeader.Status = newStatus;
+                    _dbContext.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
             }
             return _response;
         }

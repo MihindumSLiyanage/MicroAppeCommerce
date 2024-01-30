@@ -17,17 +17,15 @@ namespace Services.CartAPI.Controllers
         private readonly AppDbContext _dbContext;
         private IProductService _productService;
         private ICouponService _couponService;
-        private IConfiguration _configuration;
 
         public CartController(AppDbContext dbContext,
-            IMapper mapper, IProductService productService, ICouponService couponService, IConfiguration configuration)
+            IMapper mapper, IProductService productService, ICouponService couponService)
         {
             _dbContext = dbContext;
             _productService = productService;
             this._response = new ResponseDto();
             _mapper = mapper;
             _couponService = couponService;
-            _configuration = configuration;
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -90,6 +88,22 @@ namespace Services.CartAPI.Controllers
             }
             return _response;
         }
+
+        //[HttpPost("EmailCartRequest")]
+        //public async Task<object> EmailCartRequest([FromBody] CartDto cartDto)
+        //{
+        //    try
+        //    {
+        //        await _messageBus.PublishMessage(cartDto, _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCartQueue"));
+        //        _response.Result = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _response.IsSuccess = false;
+        //        _response.Message = ex.ToString();
+        //    }
+        //    return _response;
+        //}
 
         [HttpPost("CartUpsert")]
         public async Task<ResponseDto> CartUpsert(CartDto cartDto)

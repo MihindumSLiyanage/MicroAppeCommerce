@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Services.CartAPI;
-using Services.CartAPI.Extensions;
 using Services.CartAPI.Data;
-using Services.CartAPI.Service.IService;
+using Services.CartAPI.Extensions;
 using Services.CartAPI.Service;
+using Services.CartAPI.Service.IService;
 using Services.CartAPI.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -65,6 +65,8 @@ builder.Services.AddSwaggerGen(option =>
 
 builder.AddAppAuthetication();
 
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -73,6 +75,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+Stripe.StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 app.UseHttpsRedirection();
 
