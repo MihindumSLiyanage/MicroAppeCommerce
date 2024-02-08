@@ -34,7 +34,8 @@
                 </div>
                 <hr />
 
-                @foreach(var cartObj in Model.CartDetails){
+                @foreach(var cartObj in Model.CartDetails)
+                {
                 <div class="row h-100">
                     <div class="col-4 col-md-2 text-center py-2">
                         <img src="@cartObj.Product.ImageUrl" class="rounded" width="100%" />

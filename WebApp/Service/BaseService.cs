@@ -38,34 +38,9 @@ namespace WebApp.Service
 
                 message.RequestUri = new Uri(requestDto.Url);
 
-                if (requestDto.ContentType == ContentType.MultipartFormData)
+                if (requestDto.Data != null)
                 {
-                    var content = new MultipartFormDataContent();
-
-                    foreach (var prop in requestDto.Data.GetType().GetProperties())
-                    {
-                        var value = prop.GetValue(requestDto.Data);
-                        if (value is FormFile)
-                        {
-                            var file = (FormFile)value;
-                            if (file != null)
-                            {
-                                content.Add(new StreamContent(file.OpenReadStream()), prop.Name, file.FileName);
-                            }
-                        }
-                        else
-                        {
-                            content.Add(new StringContent(value == null ? "" : value.ToString()), prop.Name);
-                        }
-                    }
-                    message.Content = content;
-                }
-                else
-                {
-                    if (requestDto.Data != null)
-                    {
-                        message.Content = new StringContent(JsonConvert.SerializeObject(requestDto.Data), Encoding.UTF8, "application/json");
-                    }
+                    message.Content = new StringContent(JsonConvert.SerializeObject(requestDto.Data), Encoding.UTF8, "application/json");
                 }
 
                 HttpResponseMessage? apiResponse = null;
