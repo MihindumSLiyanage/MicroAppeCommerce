@@ -22,14 +22,7 @@ namespace WebApp.Service
             {
                 HttpClient client = _httpClientFactory.CreateClient("MicroAPI");
                 HttpRequestMessage message = new();
-                if (requestDto.ContentType == ContentType.MultipartFormData)
-                {
-                    message.Headers.Add("Accept", "*/*");
-                }
-                else
-                {
-                    message.Headers.Add("Accept", "application/json");
-                }
+                
                 if (withBearer)
                 {
                     var token = _tokenProvider.GetToken();

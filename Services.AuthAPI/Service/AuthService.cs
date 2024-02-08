@@ -1,6 +1,5 @@
-﻿using Mango.Services.AuthAPI.Data;
-using Mango.Services.AuthAPI.Service.IService;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using Services.AuthAPI.Data;
 using Services.AuthAPI.Models;
 using Services.AuthAPI.Models.Dto;
 using Services.AuthAPI.Service.IService;

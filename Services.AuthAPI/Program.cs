@@ -1,11 +1,9 @@
-using Mango.Services.AuthAPI.Data;
-using Mango.Services.AuthAPI.Service.IService;
-using Mango.Services.AuthAPI.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Services.AuthAPI.Data;
 using Services.AuthAPI.Models;
-using Services.AuthAPI.Service.IService;
 using Services.AuthAPI.Service;
+using Services.AuthAPI.Service.IService;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,4 +1,5 @@
 ﻿@model CartDto
+@using System.Globalization
 
 <form method="post">
     <input asp-for="CartHeader.UserId" hidden />
@@ -20,15 +21,15 @@
             <div class="col-7">
                 <div class="row pt-2">
                     <div class="col-12 py-2">
-                        <input asp-for="CartHeader.Name" placeholder="full name..." class="form-control" />
+                        <input asp-for="CartHeader.Name" placeholder="Full name..." class="form-control" />
                         <span asp-validation-for="CartHeader.Name" class="text-danger"></span>
                     </div>
                     <div class="col-12 py-2">
-                        <input placeholder="email..." asp-for="CartHeader.Email" class="form-control" />
+                        <input placeholder="Email..." asp-for="CartHeader.Email" class="form-control" />
                         <span asp-validation-for="CartHeader.Email" class="text-danger"></span>
                     </div>
                     <div class="col-12 py-2">
-                        <input class="form-control" asp-for="CartHeader.Phone" placeholder="phone number..." />
+                        <input class="form-control" asp-for="CartHeader.Phone" placeholder="Phone Number..." />
                         <span asp-validation-for="CartHeader.Phone" class="text-danger"></span>
                     </div>
                     <div class="col-12 pt-2">
@@ -63,7 +64,7 @@
                                 </div>
 
                                 <div class="col-3" style="font-size:11px;">
-                                    <span style="font-size:17px;"> @cartObj.Product.Price.ToString("c")</span>
+                                    <span style="font-size:17px;"> @((cartObj.Product.Price).ToString("C", new CultureInfo("en-LK")))</span>
 
                                 </div>
                                 <div class="col-3" style="font-size:11px;">
@@ -74,10 +75,11 @@
                         }
                         <div class="row">
                             <div class="col-12 text-center pr-4 text-danger">
-                                Order Total :  @Model.CartHeader.CartTotal.ToString("c") <br />
+                                
+                                Order Total :  @((Model.CartHeader.CartTotal).ToString("C", new CultureInfo("en-LK"))) <br />
                                 @if (Model.CartHeader.Discount > 0)
                                 {
-                                    <span class="text-success"> Order Discount :  @Model.CartHeader.Discount.ToString("c")</span>
+                                    <span class="text-success"> Order Discount :  @((Model.CartHeader.Discount).ToString("C", new CultureInfo("en-LK")))</span>
                                 }
                             </div>
                         </div>

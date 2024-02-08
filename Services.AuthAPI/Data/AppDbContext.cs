@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Services.AuthAPI.Models;
 
-namespace Mango.Services.AuthAPI.Data
+namespace Services.AuthAPI.Data
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
