@@ -54,20 +54,56 @@ namespace Services.ProductAPI.Data
             modelBuilder.Entity<Product>().HasData(new Product
             {
                 ProductId = 5,
-                Name = "Apple AirPods Pro",
-                Price = 249.99,
-                Description = "The Apple AirPods Pro offer active noise cancellation, immersive sound, and a customizable fit for a comfortable listening experience. They come with a wireless charging case.",
-                ImageUrl = "https://cdn2.gsmarena.com/vv/pics/apple/apple-airpods-pro-1.jpg",
-                CategoryName = "Audio Accessories"
+                Name = "Samsung Galaxy S21 Ultra",
+                Price = 1199.99,
+                Description = "The Samsung Galaxy S21 Ultra is a premium Android smartphone with a stunning 6.8-inch Dynamic AMOLED display, powerful Exynos 2100 processor, and a versatile quad-camera setup.",
+                ImageUrl = "https://cdn2.gsmarena.com/vv/pics/samsung/samsung-galaxy-s21-ultra-5g-1.jpg",
+                CategoryName = "Smartphone"
             });
             modelBuilder.Entity<Product>().HasData(new Product
             {
                 ProductId = 6,
-                Name = "Fitbit Charge 5 Fitness Tracker",
-                Price = 179.95,
-                Description = "Track your fitness goals with the Fitbit Charge 5. It monitors your heart rate, sleep quality, and provides insights into your overall health. With built-in GPS, it's perfect for tracking outdoor activities.",
-                ImageUrl = "https://cdn2.gsmarena.com/vv/pics/fitbit/fitbit-charge-5-1.jpg",
-                CategoryName = "Fitness Trackers"
+                Name = "Samsung Galaxy Z Fold 3",
+                Price = 1799.99,
+                Description = "The Samsung Galaxy Z Fold 3 is a cutting-edge foldable smartphone with a large 7.6-inch Dynamic AMOLED display that folds into a compact form factor. It offers multitasking capabilities and comes with the S Pen for enhanced productivity.",
+                ImageUrl = "https://cdn2.gsmarena.com/vv/pics/samsung/samsung-galaxy-z-fold3-5g-2.jpg",
+                CategoryName = "Smartphone"
+            });
+            modelBuilder.Entity<Product>().HasData(new Product
+            {
+                ProductId = 7,
+                Name = "Sony Xperia 1 III",
+                Price = 1299.99,
+                Description = "The Sony Xperia 1 III is a flagship Android smartphone with a stunning 6.5-inch 4K HDR OLED display, Snapdragon 888 processor, and a versatile triple-camera system. It offers pro-level photography features and audio enhancements.",
+                ImageUrl = "https://cdn2.gsmarena.com/vv/pics/sony/sony-xperia-1-iii-2.jpg",
+                CategoryName = "Smartphone"
+            });
+            modelBuilder.Entity<Product>().HasData(new Product
+            {
+                ProductId = 8,
+                Name = "OnePlus Nord 2",
+                Price = 399.99,
+                Description = "The OnePlus Nord 2 is a mid-range Android smartphone with a powerful MediaTek Dimensity 1200 processor, 6.43-inch Fluid AMOLED display, and a capable triple-camera system. It offers flagship-like performance at an affordable price.",
+                ImageUrl = "https://cdn2.gsmarena.com/vv/pics/oneplus/oneplus-nord-2-5g-1.jpg",
+                CategoryName = "Smartphone"
+            });
+            modelBuilder.Entity<Product>().HasData(new Product
+            {
+                ProductId = 9,
+                Name = "Xiaomi Poco F3",
+                Price = 349.99,
+                Description = "The Xiaomi Poco F3 is a value-for-money Android smartphone with a Snapdragon 870 processor, 6.67-inch AMOLED display, and a capable triple-camera system. It offers flagship-level performance at an affordable price.",
+                ImageUrl = "https://cdn2.gsmarena.com/vv/pics/xiaomi/xiaomi-poco-f3-1.jpg",
+                CategoryName = "Smartphone"
+            });
+            modelBuilder.Entity<Product>().HasData(new Product
+            {
+                ProductId = 10,
+                Name = "Google Pixel 5a",
+                Price = 449.99,
+                Description = "The Google Pixel 5a is a budget-friendly Android smartphone with a Snapdragon 765G processor, 6.34-inch OLED display, and a capable dual-camera system. It offers a pure Android experience and long battery life.",
+                ImageUrl = "https://cdn2.gsmarena.com/vv/pics/google/google-pixel-5a-5g-2.jpg",
+                CategoryName = "Smartphone"
             });
         }
     }
